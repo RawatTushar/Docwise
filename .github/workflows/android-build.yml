@@ -1,0 +1,63 @@
+name: Android CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build ${{ matrix.client }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        client:
+          - mahuat
+          - omcuat
+          - skruat
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy Client Environment
+        run: |
+          cp clients/${{ matrix.client }}/.env .env
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Node Modules
+        run: npm ci
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Make Gradle Executable
+        run: chmod +x android/gradlew
+
+      - name: Capitalize Flavor Name
+        id: flavor
+        run: |
+          CLIENT=$(echo "${{ matrix.client }}" | sed 's/.*/\u&/')
+          echo "CLIENT=$CLIENT" >> $GITHUB_ENV
+
+      - name: Build AAB
+        run: |
+          cd android
+          ./gradlew bundle${CLIENT}Release
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.client }}-aab
+          path: android/app/build/outputs/bundle/${CLIENT}Release/*.aab

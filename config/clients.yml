@@ -1,0 +1,19 @@
+clients:
+
+  - id: skruat
+    flavor: skruat
+    package: com.docwise.skruat
+    firebase: skruat
+    enabled: true
+
+  - id: omcuat
+    flavor: omcuat
+    package: com.docwise.omcuat
+    firebase: omcuat
+    enabled: true
+
+  - id: mahuat
+    flavor: mahuat
+    package: com.docwise.mahuat
+    firebase: mahuat
+    enabled: true

@@ -85,6 +85,23 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    productFlavors {
+
+    mahuat{
+        dimension "client"
+        applicationId "com.docwise.mahuat"
+    }
+
+    omcuat {
+        dimension "client"
+        applicationId "com.docwise.omcuat"
+    }
+
+    skruat {
+        dimension "client"
+        applicationId "com.docwise.skruat"
+    }
+}
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
