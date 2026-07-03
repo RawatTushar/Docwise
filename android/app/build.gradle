@@ -78,6 +78,7 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.docwise"
+    flavorDimensions "client" 
     defaultConfig {
         applicationId "com.docwise"
         minSdkVersion rootProject.ext.minSdkVersion
