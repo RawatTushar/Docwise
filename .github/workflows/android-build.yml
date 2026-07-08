@@ -63,8 +63,7 @@ jobs:
 
       - name: Capitalize Flavor Name
         run: |
-          CLIENT="$(tr '[:lower:]' '[:upper:]' <<< "${{ matrix.client }}" | sed 's/^\(.\)/\L\1/')"
-          CLIENT="$(echo "${{ matrix.client }}" | sed 's/.*/\u&/')"
+          CLIENT=$(echo "${{ matrix.client }}" | sed 's/.*/\u&/')
           echo "CLIENT=$CLIENT" >> $GITHUB_ENV
 
       - name: Build APK
@@ -81,7 +80,7 @@ jobs:
           firebase appdistribution:distribute \
             android/app/build/outputs/apk/${{ matrix.client }}/release/*.apk \
             --app ${{ matrix.firebase_app_id }} \
-            --groups "qa-testing" \
+            --groups qa-testing \
             --release-notes "Automated build from GitHub Actions"
 
       - name: Upload APK Artifact
@@ -89,3 +88,19 @@ jobs:
         with:
           name: ${{ matrix.client }}-apk
           path: android/app/build/outputs/apk/${{ matrix.client }}/release/*.apk
+
+  approval-test:
+    name: QA Approval
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    steps:
+      - name: QA Approved
+        run: |
+          echo "====================================="
+          echo "QA APPROVED THE BUILD ✅"
+          echo "Workflow resumed successfully."
+          echo "====================================="
