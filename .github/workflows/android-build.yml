@@ -27,9 +27,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Copy Client Environment
+      - name: Create Client Environment
         run: |
-          cp clients/${{ matrix.client }}/.env .env
+         if [ "${{ matrix.client }}" = "mahuat" ]; then
+         echo "${{ secrets.MAHUAT_ENV }}" > .env
+         elif [ "${{ matrix.client }}" = "omcuat" ]; then
+         echo "${{ secrets.OMCUAT_ENV }}" > .env
+         elif [ "${{ matrix.client }}" = "skruat" ]; then
+         echo "${{ secrets.SKRUAT_ENV }}" > .env
+         fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
