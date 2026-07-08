@@ -81,7 +81,7 @@ jobs:
           firebase appdistribution:distribute \
             android/app/build/outputs/apk/${{ matrix.client }}/release/*.apk \
             --app ${{ matrix.firebase_app_id }} \
-            --groups "QA Testing" \
+            --groups "qa-testing" \
             --release-notes "Automated build from GitHub Actions"
 
       - name: Upload APK Artifact
