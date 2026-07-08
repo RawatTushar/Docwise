@@ -13,20 +13,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        client:
-          - mahuat
-          - omcuat
-          - skruat
+        include:
+          - client: mahuat
+            firebase_app_id: 1:583927464597:android:8cb71740c9919f2cacd19c
+
+          - client: omcuat
+            firebase_app_id: 1:583927464597:android:6757b2e9691332beacd19c
+
+          - client: skruat
+            firebase_app_id: 1:583927464597:android:e5ac64cf40672d89acd19c
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Copy Client Environment
         run: |
           cp clients/${{ matrix.client }}/.env .env
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -35,6 +40,9 @@ jobs:
       - name: Install Node Modules
         run: npm ci
 
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -42,22 +50,42 @@ jobs:
           java-version: 17
           cache: gradle
 
+      - name: Create Firebase Credentials
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > firebase-service-account.json
+
+      - name: Set Google Credentials
+        run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/firebase-service-account.json" >> $GITHUB_ENV
+
       - name: Make Gradle Executable
         run: chmod +x android/gradlew
 
       - name: Capitalize Flavor Name
-        id: flavor
         run: |
-          CLIENT=$(echo "${{ matrix.client }}" | sed 's/.*/\u&/')
+          CLIENT="$(tr '[:lower:]' '[:upper:]' <<< "${{ matrix.client }}" | sed 's/^\(.\)/\L\1/')"
+          CLIENT="$(echo "${{ matrix.client }}" | sed 's/.*/\u&/')"
           echo "CLIENT=$CLIENT" >> $GITHUB_ENV
 
-      - name: Build AAB
+      - name: Build APK
         run: |
           cd android
-          ./gradlew bundle${CLIENT}Release
+          ./gradlew assemble${CLIENT}Release
 
-      - name: Upload AAB
+      - name: Verify APK Output
+        run: |
+          ls -R android/app/build/outputs/apk
+
+      - name: Upload to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute \
+            android/app/build/outputs/apk/${{ matrix.client }}/release/*.apk \
+            --app ${{ matrix.firebase_app_id }} \
+            --groups "QA Testing" \
+            --release-notes "Automated build from GitHub Actions"
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.client }}-aab
-          path: android/app/build/outputs/bundle/${CLIENT}Release/*.aab
+          name: ${{ matrix.client }}-apk
+          path: android/app/build/outputs/apk/${{ matrix.client }}/release/*.apk

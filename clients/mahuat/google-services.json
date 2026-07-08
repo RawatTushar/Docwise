@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "583927464597",
+    "project_id": "docwise-630ca",
+    "storage_bucket": "docwise-630ca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583927464597:android:8cb71740c9919f2cacd19c",
+        "android_client_info": {
+          "package_name": "com.docwise.mahuat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3UNlakq5Cx9UvWRyqfp6iOZbxUukBEjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
