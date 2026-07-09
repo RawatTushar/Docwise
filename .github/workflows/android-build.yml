@@ -32,12 +32,19 @@ jobs:
          mkdir -p src/config
 
          if [ "${{ matrix.client }}" = "mahuat" ]; then
-         echo '${{ secrets.MAHUAT_ENV }}' > src/config/env.js
+         BASE_URL="${{ secrets.MAHUAT_BASE_URL }}"
+         CLIENT_NAME="Mahuat"
          elif [ "${{ matrix.client }}" = "omcuat" ]; then
-         echo '${{ secrets.OMCUAT_ENV }}' > src/config/env.js
+         BASE_URL="${{ secrets.OMCUAT_BASE_URL }}"
+         CLIENT_NAME="Omcuat"
          else
-         echo '${{ secrets.SKRUAT_ENV }}' > src/config/env.js
+         BASE_URL="${{ secrets.SKRUAT_BASE_URL }}"
+         CLIENT_NAME="Skruat"
          fi
+
+         printf 'export const BASE_URL = "%s";\nexport const CLIENT_NAME = "%s";\n' \
+         "$BASE_URL" "$CLIENT_NAME" > src/config/env.js
+
 
       - name: Verify Environment
         run: |
@@ -177,17 +184,24 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
         
+     
       - name: Create Client Environment
         run: |
          mkdir -p src/config
-
+  
          if [ "${{ matrix.client }}" = "mahuat" ]; then
-         echo '${{ secrets.MAHUAT_ENV }}' > src/config/env.js
+         BASE_URL="${{ secrets.MAHUAT_BASE_URL }}"
+         CLIENT_NAME="Mahuat"
          elif [ "${{ matrix.client }}" = "omcuat" ]; then
-         echo '${{ secrets.OMCUAT_ENV }}' > src/config/env.js
+         BASE_URL="${{ secrets.OMCUAT_BASE_URL }}"
+         CLIENT_NAME="Omcuat"
          else
-         echo '${{ secrets.SKRUAT_ENV }}' > src/config/env.js
+         BASE_URL="${{ secrets.SKRUAT_BASE_URL }}"
+         CLIENT_NAME="Skruat"
          fi
+
+         printf 'export const BASE_URL = "%s";\nexport const CLIENT_NAME = "%s";\n' \
+         "$BASE_URL" "$CLIENT_NAME" > src/config/env.js
 
       - name: Restore Play Service Account
         run: |
