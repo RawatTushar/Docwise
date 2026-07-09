@@ -1,3 +1,7 @@
+println "keystore.properties exists: ${keystorePropertiesFile.exists()}"
+println "storeFile = ${keystoreProperties['storeFile']}"
+println "keyAlias = ${keystoreProperties['keyAlias']}"
+
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
