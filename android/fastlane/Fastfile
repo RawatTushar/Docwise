@@ -1,0 +1,52 @@
+# This file contains the fastlane.tools configuration
+# Documentation: https://docs.fastlane.tools
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Deploy any client to Google Play Internal Testing"
+
+  lane :deploy do |options|
+
+    client = options[:client]
+    package = options[:package]
+
+    UI.user_error!("Please provide client") unless client
+    UI.user_error!("Please provide package") unless package
+
+    gradle(
+      task: "clean"
+    )
+
+    gradle(
+      task: "bundle",
+      flavor: client,
+      build_type: "Release"
+    )
+
+    aab_path = "../app/build/outputs/bundle/#{client.downcase}Release/app-#{client.downcase}-release.aab"
+
+    unless File.exist?(aab_path)
+      UI.user_error!("AAB not found at #{aab_path}")
+    end
+
+    upload_to_play_store(
+      json_key: "fastlane/play-account.json",
+      package_name: package,
+      track: "internal",
+      aab: aab_path,
+
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+
+      release_status: "completed"
+    )
+
+    UI.success("Successfully uploaded #{package} to Internal Testing")
+
+  end
+
+end

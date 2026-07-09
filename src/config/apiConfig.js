@@ -22,9 +22,16 @@ export const CLIENTS = {
   },
   SkrUat:{
        BASE_URL:"https://patientportal.skrhospital.com/MobiHisTreeCoreReact_UAT",
-  }
+  },
+  OmcUaT: {
+   BASE_URL: "http://103.234.185.160/MobiHistreeReactUat_OMC",
+},
+  MahUat: {
+    BASE_URL: "https://abdm.voiceai.co.in/Mobihistree_React_MAH_UAT",
+  },
+
 };
 
-export const DEFAULT_CLIENT = 'SkrUat';
+export const DEFAULT_CLIENT = 'MahUat';
 export const BASE_URL = CLIENTS[DEFAULT_CLIENT].BASE_URL;
 

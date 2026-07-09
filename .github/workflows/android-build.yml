@@ -110,3 +110,97 @@ jobs:
           echo "QA APPROVED THE BUILD ✅"
           echo "Workflow resumed successfully."
           echo "====================================="
+
+
+  deploy-play:
+    name: Deploy to Google Play Internal Testing
+    needs: approval-test
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - client: mahuat
+            package: com.docwise.mahuat
+
+          - client: omcuat
+            package: com.docwise.omcuat
+
+          - client: skruat
+            package: com.docwise.skruat
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Node Modules
+        run: npm ci
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+ 
+      - name: Install Fastlane
+        run: gem install fastlane
+        
+      - name: Create Client Environment
+        run: |
+          if [ "${{ matrix.client }}" = "mahuat" ]; then
+            echo "${{ secrets.MAHUAT_ENV }}" > .env
+          elif [ "${{ matrix.client }}" = "omcuat" ]; then
+            echo "${{ secrets.OMCUAT_ENV }}" > .env
+          else
+            echo "${{ secrets.SKRUAT_ENV }}" > .env
+          fi
+
+      - name: Restore Play Service Account
+        run: |
+          mkdir -p android/fastlane
+          echo '${{ secrets.PLAY_ACCOUNT_JSON }}' > android/fastlane/play-account.json
+
+      - name: Restore Keystore Properties
+        run: |
+           echo "${{ secrets.KEYSTORE_PROPERTIES }}" | base64 --decode > android/keystore.properties
+
+      - name: Restore Release Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/docwise-release.keystore
+      
+      - name: Make Gradle Executable
+        run: chmod +x android/gradlew
+
+      - name: Capitalize Flavor Name
+        run: |
+          CLIENT=$(echo "${{ matrix.client }}" | sed 's/.*/\u&/')
+          echo "CLIENT=$CLIENT" >> $GITHUB_ENV
+
+      - name: Build Release AAB
+        run: |
+          cd android
+          ./gradlew bundle${CLIENT}Release \
+            -PVERSION_CODE=${{ github.run_number }} \
+            -PVERSION_NAME=1.0.${{ github.run_number }}
+
+      - name: Upload to Google Play Internal Testing
+        run: |
+          cd android
+          bundle exec fastlane deploy \
+            client:${{ matrix.client }} \
+            package:${{ matrix.package }}
+   

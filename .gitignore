@@ -2,6 +2,8 @@
 #
 .DS_Store
 clients/**/.env
+android/keystore.properties
+android/app/*.keystore
 # Xcode
 #
 build/
@@ -73,3 +75,16 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+# Signing
+android/app/*.keystore
+android/app/*.jks
+android/keystore.properties
+
+# Fastlane credentials
+android/fastlane/play-account.json
+
+# Temporary files
+*.base64
+
+# Client Firebase configs
+android/google-services.json
