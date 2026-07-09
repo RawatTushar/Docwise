@@ -1,6 +1,4 @@
-println "keystore.properties exists: ${keystorePropertiesFile.exists()}"
-println "storeFile = ${keystoreProperties['storeFile']}"
-println "keyAlias = ${keystoreProperties['keyAlias']}"
+
 
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
@@ -15,6 +13,9 @@ def keystorePropertiesFile = rootProject.file("keystore.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+println "keystore.properties exists: ${keystorePropertiesFile.exists()}"
+println "storeFile = ${keystoreProperties['storeFile']}"
+println "keyAlias = ${keystoreProperties['keyAlias']}"
 
 /**
  * This is the configuration block to customize your React Native Android app.
