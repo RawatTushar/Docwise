@@ -56,6 +56,8 @@ jobs:
           java-version: 17
           cache: gradle
 
+
+
       - name: Create Firebase Credentials
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > firebase-service-account.json
@@ -64,6 +66,13 @@ jobs:
         run: |
           echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/firebase-service-account.json" >> $GITHUB_ENV
 
+      - name: Restore Keystore Properties
+        run: |
+          echo "${{ secrets.KEYSTORE_PROPERTIES }}" | base64 --decode > android/keystore.properties
+
+      - name: Restore Release Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/docwise-release.keystore          
       - name: Make Gradle Executable
         run: chmod +x android/gradlew
 
