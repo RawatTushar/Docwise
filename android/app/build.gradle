@@ -1,8 +1,16 @@
 
-
+project.ext.envConfigFiles = [
+    mahuatdebug: ".env",
+    mahuatrelease: ".env",
+    omcuatdebug: ".env",
+    omcuatrelease: ".env",
+    skruatdebug: ".env",
+    skruatrelease: ".env"
+]
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import java.util.Properties
 import java.io.FileInputStream
@@ -41,8 +49,8 @@ android {
         applicationId "com.docwise"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-versionCode project.hasProperty("VERSION_CODE") ? project.VERSION_CODE.toInteger() : 2
-versionName project.hasProperty("VERSION_NAME") ? project.VERSION_NAME : "1.0.1"
+ versionCode project.findProperty("VERSION_CODE")?.toInteger() ?: 3
+    versionName project.findProperty("VERSION_NAME") ?: "1.0.3"
     }
 
     productFlavors {

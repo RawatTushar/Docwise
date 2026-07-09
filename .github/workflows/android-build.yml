@@ -37,6 +37,13 @@ jobs:
          echo "${{ secrets.SKRUAT_ENV }}" > .env
          fi
 
+      - name: Verify .env
+        run: |
+         echo "===== CLIENT ====="
+         echo "${{ matrix.client }}"
+         echo "===== ENV ====="
+         cat .env
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -224,9 +231,9 @@ jobs:
       - name: Build Release AAB
         run: |
           cd android
-          ./gradlew bundle${CLIENT}Release \
-            -PVERSION_CODE=${{ github.run_number }} \
-            -PVERSION_NAME=1.0.${{ github.run_number }}
+         ./gradlew bundle${CLIENT}Release \
+         -PVERSION_CODE=$(( ${{ github.run_number }} + 2 )) \
+         -PVERSION_NAME=1.0.$(( ${{ github.run_number }} + 2 ))
 
       - name: Upload to Google Play Internal Testing
         run: |

@@ -1,37 +1,6 @@
-export const CLIENTS = {
-  RajagiriUAT: {
-    BASE_URL: 'https://mobappsuat.rajagirihospital.com/MobhiHisTreeCore_UATReact',
-    WebViewLink: 'https://mobappsuat.rajagirihospital.com/MobHisTreeTest/MobiHISTree.svc/',
-    HisReportingService: 'https://mobappsuat.rajagirihospital.com/HISTreeReportingService_UAT',
-  },
-  // Add more clients here to switch between multiple environments.
-  RajagiriLive: {
-    BASE_URL: 'https://patientportal.rajagirihospital.com/MobiHISTreeReact',
-    WebViewLink: 'https://patientportal.rajagirihospital.com/MobHisTreeForLive/MobiHISTree.svc/',
-    HisReportingService: 'https://patientportal.rajagirihospital.com/HISTreeReportingService_Live',
-  },
-  ShijaLive: {
-    BASE_URL: 'https://mobihistree.shijahospitals.com/MobiHISTreeCoreLive',
-    WebViewLink: 'https://mobihistree.shijahospitals.com/MobWebViewLive/MobiHISTree.svc',
-    HisReportingService: 'https://mobihistree.shijahospitals.com/HISTreeReportingService',
-  },
-  WoodlandsUAT: {
-    BASE_URL: 'https://uat.woodlandshospital.in/MobiHistreeReactAPP',
-    WebViewLink: 'https://uat.woodlandshospital.in/MobiHISTreeUat/MobiHISTree.svc/',
-    HisReportingService: 'https://uat.woodlandshospital.in/PPService_UAT/Service.svc/',
-  },
-  SkrUat:{
-       BASE_URL:"https://patientportal.skrhospital.com/MobiHisTreeCoreReact_UAT",
-  },
-  OmcUaT: {
-   BASE_URL: "http://103.234.185.160/MobiHistreeReactUat_OMC",
-},
-  MahUat: {
-    BASE_URL: "https://abdm.voiceai.co.in/Mobihistree_React_MAH_UAT",
-  },
 
-};
+import Config from "react-native-config";
+console.log("CLIENT =", Config.CLIENT_NAME);
+console.log("URL =", Config.BASE_URL);
 
-export const DEFAULT_CLIENT = 'MahUat';
-export const BASE_URL = CLIENTS[DEFAULT_CLIENT].BASE_URL;
-
+export const BASE_URL = Config.BASE_URL;
