@@ -176,17 +176,27 @@ jobs:
 
       - name: Restore Keystore Properties
         run: |
-           echo "${{ secrets.KEYSTORE_PROPERTIES }}" | base64 --decode > android/keystore.properties
-      
-      - name: Debug keystore.properties
+          echo "${{ secrets.KEYSTORE_PROPERTIES }}" | base64 --decode > android/keystore.properties
+
+      - name: Verify keystore.properties
         run: |
-          echo "===== android/keystore.properties ====="
+          echo "===== android directory ====="
+          ls -la android
+
+          echo "===== keystore.properties ====="
           cat android/keystore.properties
 
       - name: Restore Release Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/docwise-release.keystore
-      
+
+      - name: Verify release keystore
+        run: |
+          echo "===== android/app ====="
+          ls -la android/app
+
+      - name: Make Gradle Executable
+        run: chmod +x android/gradlew
       - name: Make Gradle Executable
         run: chmod +x android/gradlew
 
