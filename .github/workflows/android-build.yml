@@ -177,6 +177,11 @@ jobs:
       - name: Restore Keystore Properties
         run: |
            echo "${{ secrets.KEYSTORE_PROPERTIES }}" | base64 --decode > android/keystore.properties
+      
+      - name: Debug keystore.properties
+        run: |
+          echo "===== android/keystore.properties ====="
+          cat android/keystore.properties
 
       - name: Restore Release Keystore
         run: |
