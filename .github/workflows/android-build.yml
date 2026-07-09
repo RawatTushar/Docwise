@@ -32,13 +32,12 @@ jobs:
          mkdir -p src/config
 
          if [ "${{ matrix.client }}" = "mahuat" ]; then
-         echo "${{ secrets.MAHUAT_ENV }}" > src/config/env.js
+         echo '${{ secrets.MAHUAT_ENV }}' > src/config/env.js
          elif [ "${{ matrix.client }}" = "omcuat" ]; then
-         echo "${{ secrets.OMCUAT_ENV }}" > src/config/env.js
+         echo '${{ secrets.OMCUAT_ENV }}' > src/config/env.js
          else
-         echo "${{ secrets.SKRUAT_ENV }}" > src/config/env.js
+         echo '${{ secrets.SKRUAT_ENV }}' > src/config/env.js
          fi
-
 
       - name: Verify Environment
         run: |
@@ -183,12 +182,12 @@ jobs:
          mkdir -p src/config
 
          if [ "${{ matrix.client }}" = "mahuat" ]; then
-         echo "${{ secrets.MAHUAT_ENV }}" > src/config/env.js
+         echo '${{ secrets.MAHUAT_ENV }}' > src/config/env.js
          elif [ "${{ matrix.client }}" = "omcuat" ]; then
-         echo "${{ secrets.OMCUAT_ENV }}" > src/config/env.js
+         echo '${{ secrets.OMCUAT_ENV }}' > src/config/env.js
          else
-         echo "${{ secrets.SKRUAT_ENV }}" > src/config/env.js
-          fi
+         echo '${{ secrets.SKRUAT_ENV }}' > src/config/env.js
+         fi
 
       - name: Restore Play Service Account
         run: |
