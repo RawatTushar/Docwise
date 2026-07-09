@@ -180,9 +180,27 @@ jobs:
         with:
           ruby-version: '3.2'
 
- 
-      - name: Install Fastlane
-        run: gem install fastlane
+      - name: Install Bundler
+        run: gem install bundler
+
+      - name: Check Fastlane Version
+        run: |
+         cd android
+         fastlane --version
+         fastlane action upload_to_play_store
+
+
+      - name: Install Gems
+        run: |
+         cd android
+         bundle install
+
+
+      - name: Check Fastlane Version
+        run: |
+         cd android
+         bundle exec fastlane --version
+         bundle exec fastlane action upload_to_play_store
         
      
       - name: Create Client Environment
@@ -257,7 +275,7 @@ jobs:
       - name: Upload to Google Play Internal Testing
         run: |
          cd android
-         fastlane deploy \
+         bundle exec fastlane deploy \
          client:${{ matrix.client }} \
          package:${{ matrix.package }}
    
