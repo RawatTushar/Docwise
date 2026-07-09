@@ -51,7 +51,7 @@ jobs:
          echo "===== CLIENT ====="
          echo "${{ matrix.client }}"
          echo "===== env.js ====="
-         cat src/config/env.js
+
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -216,16 +216,14 @@ jobs:
            ls -la android
            test -f android/keystore.properties && echo "FOUND" || echo "NOT FOUND"
 
-           echo "=== Contents ==="
-           cat android/keystore.properties
 
       - name: Verify keystore.properties
         run: |
           echo "===== android directory ====="
           ls -la android
 
-          echo "===== keystore.properties ====="
-          cat android/keystore.properties
+          
+          
 
       - name: Restore Release Keystore
         run: |

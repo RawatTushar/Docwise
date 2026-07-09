@@ -12,7 +12,7 @@ platform :android do
     UI.user_error!("Please provide client") unless client
     UI.user_error!("Please provide package") unless package
 
-   aab_path = "app/build/outputs/bundle/#{client.downcase}Release/app-#{client.downcase}-release.aab"
+aab_path = "../app/build/outputs/bundle/#{client.downcase}Release/app-#{client.downcase}-release.aab"
     UI.message("Current Dir: #{Dir.pwd}")
 UI.message("AAB Path: #{aab_path}")
 UI.message("Exists? #{File.exist?(aab_path)}")
