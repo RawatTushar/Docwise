@@ -75,7 +75,7 @@ const Login = ({ navigation }) => {
             }
           />
           <ButtonComponent
-            title={isLoading ? 'Logging in...' : 'LOGIN'}
+            title={isLoading ? 'Logging in...' : 'lOGIN'}
             onPressEvent={onUserLogin}
             disabled={isLoading}
             extraStyles={styles.loginButton}
