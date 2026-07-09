@@ -13,6 +13,7 @@ import { getToken, getFacilityUserwise } from '../../shared/api/ApiFile';
 import LoginIdPasswordContainer from '../../shared/LoginIdPasswordContainter';
 import LoginPasswordContainer from '../../shared/LoginPasswordContainer';
 import ButtonComponent from '../../shared/ButtonComponent';
+import Config from 'react-native-config';
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -29,6 +30,14 @@ const Login = ({ navigation }) => {
       Alert.alert('Validation', 'Password is required');
       return;
     }
+    
+    Alert.alert(
+  "Environment",
+  `CLIENT: ${Config.CLIENT_NAME}\n\nBASE_URL:\n${Config.BASE_URL}`
+);
+
+console.log("CLIENT =", Config.CLIENT_NAME);
+console.log("BASE_URL =", Config.BASE_URL);
 
     setIsLoading(true);
     const tokenResponse = await getToken(username, password);
