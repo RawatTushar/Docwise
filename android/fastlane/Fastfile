@@ -1,6 +1,3 @@
-# This file contains the fastlane.tools configuration
-# Documentation: https://docs.fastlane.tools
-
 default_platform(:android)
 
 platform :android do
@@ -15,23 +12,13 @@ platform :android do
     UI.user_error!("Please provide client") unless client
     UI.user_error!("Please provide package") unless package
 
-    gradle(
-      task: "clean"
-    )
+    aab_path = "../app/build/outputs/bundle/#{client}Release/app-#{client}-release.aab"
 
-    gradle(
-      task: "bundle",
-      flavor: client,
-      build_type: "Release"
-    )
+    UI.message("Uploading AAB: #{aab_path}")
 
-aab_path = lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
-
-UI.message("AAB Path: #{aab_path}")
-
-unless File.exist?(aab_path)
-  UI.user_error!("AAB not found at #{aab_path}")
-end
+    unless File.exist?(aab_path)
+      UI.user_error!("AAB not found at #{aab_path}")
+    end
 
     upload_to_play_store(
       json_key: "fastlane/play-account.json",

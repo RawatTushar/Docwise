@@ -1,17 +1,8 @@
 
-project.ext.envConfigFiles = [
-    mahuatdebug: ".env",
-    mahuatrelease: ".env",
-    omcuatdebug: ".env",
-    omcuatrelease: ".env",
-    skruatdebug: ".env",
-    skruatrelease: ".env"
-]
+
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
-
 import java.util.Properties
 import java.io.FileInputStream
 

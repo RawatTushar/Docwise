@@ -29,20 +29,23 @@ jobs:
 
       - name: Create Client Environment
         run: |
+         mkdir -p src/config
+
          if [ "${{ matrix.client }}" = "mahuat" ]; then
-         echo "${{ secrets.MAHUAT_ENV }}" > .env
+         echo "${{ secrets.MAHUAT_ENV }}" > src/config/env.js
          elif [ "${{ matrix.client }}" = "omcuat" ]; then
-         echo "${{ secrets.OMCUAT_ENV }}" > .env
-         elif [ "${{ matrix.client }}" = "skruat" ]; then
-         echo "${{ secrets.SKRUAT_ENV }}" > .env
+         echo "${{ secrets.OMCUAT_ENV }}" > src/config/env.js
+         else
+         echo "${{ secrets.SKRUAT_ENV }}" > src/config/env.js
          fi
 
-      - name: Verify .env
+
+      - name: Verify Environment
         run: |
          echo "===== CLIENT ====="
          echo "${{ matrix.client }}"
-         echo "===== ENV ====="
-         cat .env
+         echo "===== env.js ====="
+         cat src/config/env.js
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -177,12 +180,14 @@ jobs:
         
       - name: Create Client Environment
         run: |
-          if [ "${{ matrix.client }}" = "mahuat" ]; then
-            echo "${{ secrets.MAHUAT_ENV }}" > .env
-          elif [ "${{ matrix.client }}" = "omcuat" ]; then
-            echo "${{ secrets.OMCUAT_ENV }}" > .env
-          else
-            echo "${{ secrets.SKRUAT_ENV }}" > .env
+         mkdir -p src/config
+
+         if [ "${{ matrix.client }}" = "mahuat" ]; then
+         echo "${{ secrets.MAHUAT_ENV }}" > src/config/env.js
+         elif [ "${{ matrix.client }}" = "omcuat" ]; then
+         echo "${{ secrets.OMCUAT_ENV }}" > src/config/env.js
+         else
+         echo "${{ secrets.SKRUAT_ENV }}" > src/config/env.js
           fi
 
       - name: Restore Play Service Account
@@ -217,9 +222,7 @@ jobs:
         run: |
           echo "===== android/app ====="
           ls -la android/app
-
-      - name: Make Gradle Executable
-        run: chmod +x android/gradlew
+f
       - name: Make Gradle Executable
         run: chmod +x android/gradlew
 
