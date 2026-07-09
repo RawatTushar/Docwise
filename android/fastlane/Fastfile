@@ -25,11 +25,13 @@ platform :android do
       build_type: "Release"
     )
 
-    aab_path = "../app/build/outputs/bundle/#{client.downcase}Release/app-#{client.downcase}-release.aab"
+aab_path = lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
 
-    unless File.exist?(aab_path)
-      UI.user_error!("AAB not found at #{aab_path}")
-    end
+UI.message("AAB Path: #{aab_path}")
+
+unless File.exist?(aab_path)
+  UI.user_error!("AAB not found at #{aab_path}")
+end
 
     upload_to_play_store(
       json_key: "fastlane/play-account.json",
