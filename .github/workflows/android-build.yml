@@ -230,7 +230,7 @@ jobs:
 
       - name: Build Release AAB
         run: |
-          cd android
+         cd android
          ./gradlew bundle${CLIENT}Release \
          -PVERSION_CODE=$(( ${{ github.run_number }} + 2 )) \
          -PVERSION_NAME=1.0.$(( ${{ github.run_number }} + 2 ))
