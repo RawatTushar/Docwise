@@ -251,6 +251,11 @@ jobs:
          -PVERSION_CODE=$(( ${{ github.run_number }} + 2 )) \
          -PVERSION_NAME=1.0.$(( ${{ github.run_number }} + 2 ))
 
+      - name: Show AAB Location
+        run: |
+         echo "===== AAB Files ====="
+         find android/app/build/outputs/bundle -type f
+
       - name: Upload to Google Play Internal Testing
         run: |
          cd android
