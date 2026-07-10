@@ -17,8 +17,8 @@ jobs:
           - client: mahuat
             firebase_app_id: 1:583927464597:android:8cb71740c9919f2cacd19c
 
-          - client: omcuat
-            firebase_app_id: 1:583927464597:android:6757b2e9691332beacd19c
+          # - client: omcuat
+          #   firebase_app_id: 1:583927464597:android:6757b2e9691332beacd19c
 
           - client: skruat
             firebase_app_id: 1:583927464597:android:e5ac64cf40672d89acd19c
