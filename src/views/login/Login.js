@@ -59,7 +59,7 @@ const Login = ({ navigation }) => {
       source={{ uri: 'https://via.placeholder.com/800x1400' }}>
       <KeyboardAwareScrollView contentContainerStyle={styles.wrapper}>
         <View style={styles.form}>
-          <Text style={styles.title}>MobiHISTree login</Text>
+          <Text style={styles.title}>MOBIHISTREE LOGIN</Text>
           <LoginIdPasswordContainer
             placeholder="UserID"
             value={username}
