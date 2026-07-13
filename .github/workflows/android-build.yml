@@ -17,8 +17,8 @@ jobs:
           - client: mahuat
             firebase_app_id: 1:583927464597:android:8cb71740c9919f2cacd19c
 
-          # - client: omcuat
-          #   firebase_app_id: 1:583927464597:android:6757b2e9691332beacd19c
+          - client: omcuat
+            firebase_app_id: 1:583927464597:android:6757b2e9691332beacd19c
 
           - client: skruat
             firebase_app_id: 1:583927464597:android:e5ac64cf40672d89acd19c
@@ -149,8 +149,8 @@ jobs:
           - client: mahuat
             package: com.docwise.mahuat
 
-          - client: omcuat
-            package: com.docwise.omcuat
+          # - client: omcuat
+          #   package: com.docwise.omcuat
 
           - client: skruat
             package: com.docwise.skruat
@@ -267,10 +267,7 @@ jobs:
          -PVERSION_CODE=$(( ${{ github.run_number }} + 2 )) \
          -PVERSION_NAME=1.0.$(( ${{ github.run_number }} + 2 ))
 
-      - name: Show AAB Location
-        run: |
-         echo "===== AAB Files ====="
-         find android/app/build/outputs/bundle -type f
+
 
       - name: Upload to Google Play Internal Testing
         run: |
