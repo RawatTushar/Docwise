@@ -149,8 +149,8 @@ jobs:
           - client: mahuat
             package: com.docwise.mahuat
 
-          # - client: omcuat
-          #   package: com.docwise.omcuat
+          - client: omcuat
+            package: com.docwise.omcuat
 
           - client: skruat
             package: com.docwise.skruat
