@@ -1,97 +1,176 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Docwise
 
-# Getting Started
+Docwise is a React Native mobile application configured for multi-client Android releases. The app supports client-specific flavors for Mahuat, Omcuat, and Skruat, with client-specific environment values and separate Android package IDs.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Overview
 
-## Step 1: Start Metro
+- React Native application with Android multi-flavor support
+- Client-specific environment configuration through the app's config layer
+- CI/CD pipeline for:
+  - Firebase App Distribution for internal testing
+  - Google Play Store internal testing via Fastlane
+- GitHub Actions-based automation for build, packaging, and release
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Project structure
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- android/ – Android native project, Gradle config, Fastlane setup, signing files
+- android/app/build.gradle – product flavors and package IDs for each client
+- android/fastlane/Fastfile – Fastlane lane for Google Play internal uploads
+- .github/workflows/android-build.yml – GitHub Actions pipeline for Firebase and Play releases
+- config/clients.yml – client metadata used to map flavors, package names, and Firebase apps
+- src/config/env.js – runtime environment values generated during CI builds
 
-```sh
-# Using npm
+## Prerequisites
+
+- Node.js 22+
+- Java 17
+- Ruby 3.2+ with Bundler
+- Android SDK and React Native environment configured
+- Access to Firebase App Distribution and Google Play Console
+
+## Local setup
+
+1. Install JavaScript dependencies
+   ```bash
+   npm ci
+   ```
+
+2. Install Android Ruby dependencies
+   ```bash
+   cd android
+   bundle install
+   ```
+
+3. Create the client environment file
+   ```bash
+   mkdir -p src/config
+   ```
+
+   Example:
+   ```js
+   // src/config/env.js
+   export const BASE_URL = "https://your-api-url";
+   export const CLIENT_NAME = "Mahuat";
+   ```
+
+4. Add Android signing files
+   - Create android/keystore.properties
+   - Place the release keystore at android/app/docwise-release.keystore
+
+## Run locally
+
+Start Metro:
+```bash
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+Run the app on Android:
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+## Build commands
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+Build a specific Android flavor:
+```bash
+cd android
+./gradlew assembleMahuatRelease
+./gradlew assembleSkruatRelease
+./gradlew assembleOmcuatRelease
 ```
 
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
+Build an Android App Bundle for Google Play:
+```bash
+cd android
+./gradlew bundleSkruatRelease -PVERSION_CODE=100 -PVERSION_NAME=1.0.100
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## CI/CD deployment flow
 
-```sh
-# Using npm
-npm run ios
+The release pipeline is defined in .github/workflows/android-build.yml.
 
-# OR using Yarn
-yarn ios
-```
+### 1. Firebase App Distribution for internal testing
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+Before the app is published to Google Play, the workflow builds client-specific APKs and uploads them to Firebase App Distribution.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Flow:
+- The workflow runs a matrix build for each enabled client
+- It creates a client-specific environment file from GitHub secrets
+- It builds an APK for the client flavor
+- It uploads the APK to Firebase App Distribution with the group qa-testing
 
-## Step 3: Modify your app
+This step is used to quickly distribute internal builds to testers before final Play Store approval.
 
-Now that you have successfully run the app, let's make changes!
+### 2. Google Play internal testing via Fastlane
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+After QA approval, the workflow builds an AAB and uploads it to Google Play internal testing using Fastlane.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+The lane in android/fastlane/Fastfile performs the following:
+- Finds the generated AAB for the selected client
+- Uploads it to the Google Play internal track
+- Uses the service account JSON from the Play Console
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## Required GitHub secrets
 
-## Congratulations! :tada:
+The workflow expects the following secrets:
 
-You've successfully run and modified your React Native App. :partying_face:
+- FIREBASE_SERVICE_ACCOUNT
+- KEYSTORE_PROPERTIES
+- KEYSTORE_BASE64
+- PLAY_ACCOUNT_JSON
+- MAHUAT_BASE_URL
+- OMCUAT_BASE_URL
+- SKRUAT_BASE_URL
 
-### Now what?
+## Multi-client release model
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+The app is built with three Android product flavors:
 
-# Troubleshooting
+- mahuat → com.docwise.mahuat
+- omcuat → com.docwise.omcuat
+- skruat → com.docwise.skruat
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+Each flavor can be released independently for internal testing and production rollout.
 
-# Learn More
+## Notes for maintainers
 
-To learn more about React Native, take a look at the following resources:
+- Keep client-specific secrets in GitHub Actions secrets, not in source control
+- Ensure the Firebase app IDs and Play package names match the intended client configuration
+- Verify the generated AAB path before running the Fastlane deployment lane
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+## Architecture 
++---------------------------+
+|        Developer          |
++-------------+-------------+
+              |
+              v
++----------------------------------------+
+|          GitHub Actions CI/CD         |
+|                                        |
+|  Stage 1: APK Release Pipeline        |
+|  - Build client-specific APKs         |
+|  - Upload to Firebase App Distribution|
+|  - Send to QA testers                 |
++------------------+---------------------+
+                   |
+                   v
++---------------------------+
+|      QA Testing Phase     |
+|  - Manual testing         |
+|  - QA review              |
++-----------+---------------+
+            |
+            v
++---------------------------+
+|  GitHub Environment Approval |
+|  - Manual approval gate   |
++-----------+---------------+
+            |
+            v
++----------------------------------------+
+|   Stage 2: Play Store Release Pipeline |
+|  - Build AAB for each client          |
+|  - Fastlane uploads to Play Store    |
+|  - Deploy to Internal Testing track  |
++------
